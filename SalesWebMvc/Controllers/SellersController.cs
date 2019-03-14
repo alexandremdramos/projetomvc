@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualStudio.Web.CodeGeneration.Contracts.Messaging;
 using SalesWebMvc.Models;
 using SalesWebMvc.Models.ViewModels;
 using SalesWebMvc.Services;
@@ -41,8 +43,9 @@ namespace SalesWebMvc.Controllers
                 {
                     return View(seller);
                 }
+                return RedirectToAction(nameof(Error), new { message = "Id not found" });
             }
-            return NotFound();
+            return RedirectToAction(nameof(Error),new { message = "Id not provided" });
         }
 
         public IActionResult Details(int? id)
@@ -54,8 +57,9 @@ namespace SalesWebMvc.Controllers
                 {
                     return View(seller);
                 }
+                return RedirectToAction(nameof(Error), new { message = "Id not found" });
             }
-            return NotFound();
+            return RedirectToAction(nameof(Error), new { message = "Id not provided" });
         }
         public IActionResult Edit(int? id)
         {
@@ -69,8 +73,9 @@ namespace SalesWebMvc.Controllers
                         new SellerFormViewModel {Seller = seller, Departments = departments};
                     return View(viewModel);
                 }
+                return RedirectToAction(nameof(Error), new { message = "Id not found" });
             }
-            return NotFound();
+            return RedirectToAction(nameof(Error), new { message = "Id not provided" });
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -78,7 +83,7 @@ namespace SalesWebMvc.Controllers
         {
             if (id != seller.Id)
             {
-                return BadRequest();
+                return RedirectToAction(nameof(Error), new { message = "Id mismatch" });
             }
 
             try
@@ -86,13 +91,10 @@ namespace SalesWebMvc.Controllers
                 _sellerService.Update(seller);
                 return RedirectToAction(nameof(Index));
             }
-            catch (NotFoundException exception)
+            catch (ApplicationException exception)
             {
-                return NotFound();
-            }
-            catch (DbConcurrencyException exception)
-            {
-                return BadRequest();
+
+                return RedirectToAction(nameof(Error), new {message = exception.Message});
             }
         }
         [HttpPost]
@@ -109,6 +111,16 @@ namespace SalesWebMvc.Controllers
         {
             _sellerService.Insert(seller);
             return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult Error(string message)
+        {
+            var viewModel = new ErrorViewModel()
+                {
+                  Message = message,
+                  RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
+                };
+            return View(viewModel);
         }
     }
 }
