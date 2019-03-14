@@ -12,12 +12,12 @@ namespace SalesWebMvc.Migrations
                 name: "Seller",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
+                    Id = table.Column<int>()
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(nullable: true),
                     Email = table.Column<string>(nullable: true),
-                    BirthDate = table.Column<DateTime>(nullable: false),
-                    BaseSalary = table.Column<double>(nullable: false),
+                    BirthDate = table.Column<DateTime>(),
+                    BaseSalary = table.Column<double>(),
                     DepartmentId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
@@ -35,11 +35,11 @@ namespace SalesWebMvc.Migrations
                 name: "SalesRecord",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
+                    Id = table.Column<int>()
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Date = table.Column<DateTime>(nullable: false),
-                    Amount = table.Column<double>(nullable: false),
-                    Status = table.Column<int>(nullable: false),
+                    Date = table.Column<DateTime>(),
+                    Amount = table.Column<double>(),
+                    Status = table.Column<int>(),
                     SellerId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
