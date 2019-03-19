@@ -9,12 +9,21 @@ namespace SalesWebMvc.Models
     public class Seller : ISeller
     {
         public int Id { get; set; }
-        [DataType(DataType.EmailAddress)]
+        [Required(ErrorMessage = "{0} Required")]
+        [StringLength(60,MinimumLength = 3, ErrorMessage = "{0} Name size must be between {1} and {2} characters")]
         public string Name { get; set; }
+        [Required(ErrorMessage = "{0} Required")]
+        [EmailAddress(ErrorMessage = "Enter a valid Email")]
+        [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
-        [Display(Name = "Birth Date") , DataType(DataType.Date)]
+        [Display(Name = "Birth Date") ]
+        [DataType(DataType.Date)]
+        [Required(ErrorMessage = "{0} Required")]
         public DateTime BirthDate { get; set; }
-        [Display(Name = "Base Salary"), DisplayFormat(DataFormatString = "{0:F2}")]
+        [Display(Name = "Base Salary")]
+        [DisplayFormat(DataFormatString = "{0:F2}")]
+        [Required(ErrorMessage = "{0} Required")]
+        [Range(100.0,50000.0,ErrorMessage = "{0} must be between {1} and {2}")]
         public double BaseSalary { get; set; }
         public Department Department { get; set; }
         public int DepartmentId { get; set; }
